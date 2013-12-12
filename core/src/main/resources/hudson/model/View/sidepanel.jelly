@@ -40,7 +40,14 @@ THE SOFTWARE.
 
       <st:include page="tasks-new.jelly" it="${it.owner}" optional="true">
         <!-- made overridable for ViewGroup that doesn't allow modifications -->
-        <l:task icon="images/24x24/new-package.png" href="${rootURL}/${it.viewUrl}newJob" title="${%NewJob(it.newPronoun)}" permission="${it.itemCreatePermission}" it="${app}" />
+        <j:choose>
+          <j:when test="${it.class.name=='hudson.model.AllView'||it.addNewJobToRoot}">
+            <l:task icon="images/24x24/new-package.png" href="${rootURL}/newJob" title="${%NewJob(it.newPronoun)}" permission="${it.itemCreatePermission}" it="${app}" />
+          </j:when>
+          <j:otherwise>
+            <l:task icon="images/24x24/new-package.png" href="${rootURL}/${it.viewUrl}newJob" title="${%NewJob(it.newPronoun)}" permission="${it.itemCreatePermission}" it="${app}" />
+          </j:otherwise>
+        </j:choose>
       </st:include>
 
       <j:choose>

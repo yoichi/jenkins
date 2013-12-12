@@ -154,6 +154,11 @@ public abstract class View extends AbstractModelObject implements AccessControll
      * If true, only show relevant queue items
      */
     protected boolean filterQueue;
+
+    /**
+     * If true, new job is added to root, not to this view.
+     */
+    protected boolean addNewJobToRoot;
     
     protected transient List<Action> transientActions;
 
@@ -385,6 +390,13 @@ public abstract class View extends AbstractModelObject implements AccessControll
      */
     public boolean isFilterQueue() {
         return filterQueue;
+    }
+
+    /**
+     * If true, new job is added to root, not to this view.
+     */
+    public boolean getAddNewJobToRoot() {
+        return addNewJobToRoot;
     }
 
     /**
@@ -960,6 +972,7 @@ public abstract class View extends AbstractModelObject implements AccessControll
         description = Util.nullify(req.getParameter("description"));
         filterExecutors = req.getParameter("filterExecutors") != null;
         filterQueue = req.getParameter("filterQueue") != null;
+        addNewJobToRoot = req.getParameter("addNewJobToRoot") != null;
 
         rename(req.getParameter("name"));
 
