@@ -47,9 +47,11 @@ THE SOFTWARE.
         <f:entry title="${%Filter build executors}" help="/help/view-config/filter-executors.html">
         	<f:checkbox name="filterExecutors" field="filterExecutors"/>
         </f:entry>
-        <f:entry title="${%Add new job to root}" help="/help/view-config/addnewjobtoroot.html">
-        	<f:checkbox name="addNewJobToRoot" field="addNewJobToRoot"/>
-        </f:entry>
+        <st:include page="configure-newjob.jelly" optional="true">
+          <f:entry title="${%Add new job to root}" help="/help/view-config/addnewjobtoroot.html">
+        	 <f:checkbox name="addNewJobToRoot" field="addNewJobToRoot"/>
+          </f:entry>
+        </st:include>
 
         <!-- subtypes can put entries here. -->
         <st:include page="configure-entries.jelly" optional="true" />
