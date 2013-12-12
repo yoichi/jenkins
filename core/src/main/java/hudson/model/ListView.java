@@ -231,10 +231,20 @@ public class ListView extends View implements Saveable {
      * @since 1.389
      */
     public void add(TopLevelItem item) throws IOException {
+        final String itemName = item.getRelativeNameFrom(getOwnerItemGroup());
+        add(itemName);
+    }
+
+    public void add(String itemName) throws IOException {
+        boolean added = false;
         synchronized (this) {
-            jobNames.add(item.getRelativeNameFrom(getOwnerItemGroup()));
+            if (includePattern == null ||
+                !includePattern.matcher(itemName).matches()) {
+                added = jobNames.add(itemName);
+            }
         }
-        save();
+        if (added)
+            save();
     }
 
     public String getIncludeRegex() {
@@ -265,10 +275,7 @@ public class ListView extends View implements Saveable {
         if (ig instanceof ModifiableItemGroup) {
             TopLevelItem item = ((ModifiableItemGroup<? extends TopLevelItem>)ig).doCreateItem(req, rsp);
             if(item!=null) {
-                synchronized (this) {
-                    jobNames.add(item.getRelativeNameFrom(getOwnerItemGroup()));
-                }
-                owner.save();
+                add(item);
             }
             return item;
         }
@@ -284,8 +291,7 @@ public class ListView extends View implements Saveable {
         if (getOwnerItemGroup().getItem(name) == null)
             throw new Failure("Query parameter 'name' does not correspond to a known item");
 
-        if (jobNames.add(name))
-            owner.save();
+        add(name);
 
         return HttpResponses.ok();
     }
