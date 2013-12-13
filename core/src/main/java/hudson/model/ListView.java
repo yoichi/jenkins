@@ -70,6 +70,11 @@ public class ListView extends View implements Saveable {
     private DescribableList<ListViewColumn, Descriptor<ListViewColumn>> columns;
 
     /**
+     * If true, job selector in configuration page is disabled.
+     */
+    private boolean jobSelectorDisabled;
+
+    /**
      * Include regex string.
      */
     private String includeRegex;
@@ -236,15 +241,21 @@ public class ListView extends View implements Saveable {
     }
 
     public void add(String itemName) throws IOException {
-        boolean added = false;
-        synchronized (this) {
-            if (includePattern == null ||
-                !includePattern.matcher(itemName).matches()) {
-                added = jobNames.add(itemName);
+        if (!jobSelectorDisabled) {
+            boolean added = false;
+            synchronized (this) {
+                if (includePattern == null ||
+                    !includePattern.matcher(itemName).matches()) {
+                    added = jobNames.add(itemName);
+                }
             }
+            if (added)
+                save();
         }
-        if (added)
-            save();
+    }
+
+    public boolean getJobSelectorDisabled() {
+        return jobSelectorDisabled;
     }
 
     public String getIncludeRegex() {
@@ -321,20 +332,23 @@ public class ListView extends View implements Saveable {
      */
     @Override
     protected void submit(StaplerRequest req) throws ServletException, FormException, IOException {
+        jobSelectorDisabled = req.getParameter("useJobSelector") == null;
         JSONObject json = req.getSubmittedForm();
         synchronized (this) {
             recurse = json.optBoolean("recurse", true);
             jobNames.clear();
-            Iterable<? extends TopLevelItem> items;
-            if (recurse) {
-                items = Items.getAllItems(getOwnerItemGroup(), TopLevelItem.class);
-            } else {
-                items = getOwnerItemGroup().getItems();
-            }
-            for (TopLevelItem item : items) {
-                String relativeNameFrom = item.getRelativeNameFrom(getOwnerItemGroup());
-                if(req.getParameter(relativeNameFrom)!=null) {
-                    jobNames.add(relativeNameFrom);
+            if (!jobSelectorDisabled) {
+                Iterable<? extends TopLevelItem> items;
+                if (recurse) {
+                    items = Items.getAllItems(getOwnerItemGroup(), TopLevelItem.class);
+                } else {
+                    items = getOwnerItemGroup().getItems();
+                }
+                for (TopLevelItem item : items) {
+                    String relativeNameFrom = item.getRelativeNameFrom(getOwnerItemGroup());
+                    if(req.getParameter(relativeNameFrom)!=null) {
+                        jobNames.add(relativeNameFrom);
+                    }
                 }
             }
         }
