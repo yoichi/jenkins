@@ -89,6 +89,8 @@ THE SOFTWARE.
       </s:entry>
     </j:if>
 
+    <st:include page="newInstanceParameters.jelly" optional="true" />
+
     <s:bottomButtonBar>
       <!--
         when there's only one radio above, form.elements['mode]' won't return an array, which makes the script complex.

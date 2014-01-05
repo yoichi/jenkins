@@ -265,10 +265,12 @@ public class ListView extends View implements Saveable {
         if (ig instanceof ModifiableItemGroup) {
             TopLevelItem item = ((ModifiableItemGroup<? extends TopLevelItem>)ig).doCreateItem(req, rsp);
             if(item!=null) {
-                synchronized (this) {
-                    jobNames.add(item.getRelativeNameFrom(getOwnerItemGroup()));
+                if (req.getParameter("_.addNewJobToView").equals("on")) {
+                    synchronized (this) {
+                        jobNames.add(item.getRelativeNameFrom(getOwnerItemGroup()));
+                    }
+                    owner.save();
                 }
-                owner.save();
             }
             return item;
         }
