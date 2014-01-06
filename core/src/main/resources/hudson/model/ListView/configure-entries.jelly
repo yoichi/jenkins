@@ -58,6 +58,9 @@ THE SOFTWARE.
     </div>
   </f:entry>
 
+  <f:optionalBlock name="unselectNewJob" title="${%Unselect new job by default}"
+                   checked="${it.unselectNewJobByDefault}" help="/help/view-config/unselectnewjob.html" />
+
   <f:optionalBlock name="useincluderegex" title="${%Use a regular expression to include jobs into the view}"
                    checked="${it.includeRegex != null}" help="/help/view-config/includeregex.html">
     <f:entry title="${%Regular expression}">

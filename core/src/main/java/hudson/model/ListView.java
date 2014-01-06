@@ -80,6 +80,11 @@ public class ListView extends View implements Saveable {
     private boolean recurse;
     
     /**
+     * If true, don't select new job by default.
+     */
+    private boolean unselectNewJobByDefault;
+
+    /**
      * Compiled include pattern from the includeRegex string.
      */
     private transient Pattern includePattern;
@@ -237,6 +242,10 @@ public class ListView extends View implements Saveable {
         save();
     }
 
+    public boolean getUnselectNewJobByDefault() {
+        return unselectNewJobByDefault;
+    }
+
     public String getIncludeRegex() {
         return includeRegex;
     }
@@ -334,6 +343,8 @@ public class ListView extends View implements Saveable {
                 }
             }
         }
+
+        unselectNewJobByDefault = req.getParameter("unselectNewJob") != null;
 
         setIncludeRegex(req.getParameter("useincluderegex") != null ? req.getParameter("includeRegex") : null);
 
